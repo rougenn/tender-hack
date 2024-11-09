@@ -76,11 +76,8 @@
                 return;
             }
 
-            fetch('http://localhost:3000/api/check-urls', {
+            fetch('http://localhost:8090/analyze-links', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify({ urls: urls }),
             })
                 .then(response => {
