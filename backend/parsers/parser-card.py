@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 import time
 import logging
 from datetime import datetime
+import json
 
 # Настройка логирования
 logging.basicConfig(
@@ -28,11 +29,9 @@ def format_date(date_string):
     :return: Форматированная дата или оригинальная строка, если формат неизвестен.
     """
     try:
-        # Пример: "31.10.2024 09:10:11"
         parsed_date = datetime.strptime(date_string, "%d.%m.%Y %H:%M:%S")
         return parsed_date.strftime("%d %B %Y, %H:%M:%S")  # Пример: "31 октября 2024, 09:10:11"
     except ValueError:
-        # Если формат неизвестен, возвращаем оригинальную строку
         return date_string
 
 def get_html(driver, url):
@@ -54,12 +53,6 @@ def get_html(driver, url):
     return html
 
 def parse_page_parameters(soup):
-    """
-    Парсинг параметров страницы, таких как условия исполнения контракта и т.д.
-    
-    :param soup: Объект BeautifulSoup
-    :return: Словарь с параметрами страницы
-    """
     logging.info("Парсинг параметров страницы.")
     page_parameters = {}
     parameters_labels = [
@@ -74,8 +67,6 @@ def parse_page_parameters(soup):
         element = soup.find("label", string=label)
         if element:
             value = element.find_next_sibling("div").get_text(strip=True)
-            
-            # Форматируем дату для поля "Даты проведения"
             if label == "Даты проведения":
                 try:
                     date_range = value.split("по")
@@ -84,9 +75,8 @@ def parse_page_parameters(soup):
                     value = f"{start_date} — {end_date}"
                 except (IndexError, ValueError):
                     pass
-            
             page_parameters[label] = value
-    
+
     logging.info(f"Параметры страницы: {page_parameters}")
     return page_parameters
 
@@ -100,6 +90,13 @@ def parse_product_data(soup):
         product_data = defaultdict(list)
         characteristics = {}
 
+        # Извлекаем имя продукта
+        name_element = card.find("a", class_="AuctionViewSpecificationCardStyles__CardHeader-sc-1bupkfz-1")
+        if name_element:
+            product_data["Имя продукта"] = name_element.get_text(strip=True)
+        else:
+            product_data["Имя продукта"] = "Не указано"
+
         # Извлекаем основные данные
         for label in [
             "Количество", "Цена за ед.", "Общая стоимость", "Код ОКПД2", 
@@ -109,11 +106,8 @@ def parse_product_data(soup):
             element = card.find("label", string=label)
             if element:
                 value = element.find_next_sibling("div").get_text(strip=True)
-                
-                # Форматируем дату, если метка соответствует
                 if label == "Даты поставки":
                     value = format_date(value)
-                
                 product_data[label] = value
 
         # Извлекаем характеристики
@@ -146,13 +140,58 @@ def parse_product_data(soup):
     logging.info(f"Парсинг завершен. Найдено продуктов: {len(parsed_products)}")
     return parsed_products
 
-def run_parser(url):
+def transform_data(parsed_data):
     """
-    Основная функция для запуска парсера. 
+    Преобразует данные от парсера в указанный формат.
     
-    :param url: URL-адрес страницы
-    :return: Словарь с параметрами страницы и списком продуктов
+    :param parsed_data: Словарь с параметрами страницы и продуктами
+    :return: Преобразованный словарь
     """
+    transformed = {}
+
+    # Преобразуем параметры страницы
+    page_params = parsed_data.get("Параметры страницы", {})
+    transformed["contract"] = 1 if page_params.get("Обеспечение исполнения контракта", "").lower() != "не требуется" else 0
+    transformed["law"] = page_params.get("Заключение происходит в соответствии с законом", "")
+    
+    # Определяем максимальный срок поставки (N)
+    products = parsed_data.get("Продукты", [])
+    max_days = 0
+    for product in products:
+        date_string = product.get("Даты поставки", "")
+        if "до" in date_string:
+            try:
+                days = int(date_string.split("до")[-1].strip().split(" ")[0])
+                max_days = max(max_days, days)
+            except ValueError:
+                pass
+    transformed["deadlines"] = max_days
+
+    # Преобразуем продукты
+    transformed_products = []
+    for product in products:
+        transformed_product = {}
+
+        # Добавляем имя продукта
+        transformed_product["name"] = product.get("Имя продукта", "")
+
+        # Извлекаем цену и убираем лишние символы
+        price_string = product.get("Цена за ед.", "")
+        price = "".join(filter(str.isdigit, price_string))
+        transformed_product["price"] = price
+
+        # Добавляем остальные характеристики
+        characteristics = product.get("Характеристики", {})
+        for key, value in characteristics.items():
+            transformed_product[key] = value
+
+        transformed_products.append(transformed_product)
+
+    transformed["products"] = transformed_products
+
+    return transformed
+
+def run_parser(url):
     options = Options()
     options.headless = True
     options.add_argument("--no-sandbox")
@@ -173,21 +212,11 @@ def run_parser(url):
         driver.quit()
 
 if __name__ == "__main__":
-    url = "https://zakupki.mos.ru/auction/9862366"
+    url = "https://zakupki.mos.ru/auction/9869552"
     parsed_data = run_parser(url)
 
-    # Красивый вывод результатов
-    print("\nПараметры страницы:")
-    for key, value in parsed_data["Параметры страницы"].items():
-        print(f"  {key}: {value}")
+    # Преобразование данных
+    transformed_data = transform_data(parsed_data)
 
-    print("\nПродукты:")
-    for product in parsed_data["Продукты"]:
-        print("\nПродукт:")
-        for key, value in product.items():
-            if key == "Характеристики":
-                print(f"  {key}:")
-                for char_key, char_value in value.items():
-                    print(f"    {char_key}: {char_value}")
-            else:
-                print(f"  {key}: {value}")
+    # Вывод преобразованных данных
+    print(json.dumps(transformed_data, ensure_ascii=False, indent=2))
