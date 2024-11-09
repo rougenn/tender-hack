@@ -97,7 +97,7 @@ body {
 .icon-image{
     width: 27px; /* Размер иконки */
     height: 27px;
-    margin-right: 35px;
+    margin-right: 10px;
 }
 .check-button:hover {
     background-color: #d0e1f2;
