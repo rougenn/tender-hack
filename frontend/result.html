@@ -1,11 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Результат</title>
+    <link rel="stylesheet" href="result.css">
 </head>
 <body>
-    HUT
+    <div class="filter-container">
+        <div class="filter-header" onclick="toggleFilter(this)">
+            <span>Фильтр критериев</span>
+            <span class="arrow"></span>
+        </div>
+        <div class="filter-body">
+            <div class="filter-item">
+                <span class="bullet"></span>
+                <span>Совпадение наименования закупки с документацией</span>
+                <input type="checkbox" />
+            </div>
+            <div class="filter-item">
+                <span class="bullet"></span>
+                <span>Обязательность указания обеспечения исполнения контракта в документации</span>
+                <input type="checkbox" />
+            </div>
+            <div class="filter-item">
+                <span class="bullet"></span>
+                <span>Совпадение требований о наличии сертификатов или лицензий данных закупки</span>
+                <input type="checkbox" />
+            </div>
+            <div class="filter-item">
+                <span class="bullet"></span>
+                <span>Согласованность графика и этапу поставки с документацией</span>
+                <input type="checkbox" />
+            </div>
+            <div class="filter-item">
+                <span class="bullet"></span>
+                <span>Соответствие цен в документации закупки</span>
+                <input type="checkbox" />
+            </div>
+            <div class="filter-item">
+                <span class="bullet"></span>
+                <span>Проверка соответствия ТЗ спецификации закупки</span>
+                <input type="checkbox" />
+            </div>
+        </div>
+    </div>
+    <div class="sidebar">
+        <div class="sidebar-header" onclick="toggleSidebar(this)">
+            <span>Несоответствие критериям</span>
+            <span class="arrow"></span>
+        </div>
+        <div class="sidebar-body">
+            <div class="criteria-item">
+                <span class="bullet"></span>
+                <span>Критерий 1 не выполнен</span>
+            </div>
+            <div class="criteria-item">
+                <span class="bullet"></span>
+                <span>Критерий 2 не выполнен</span>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        function toggleFilter(header) {
+            const filterContainer = header.parentElement;
+            const filterBody = filterContainer.querySelector('.filter-body');
+
+            filterBody.classList.toggle('open');
+            header.classList.toggle('collapsed');
+        }
+        function toggleSidebar(header) {
+            const sidebar = header.parentElement;
+            sidebar.classList.toggle('open');
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,149 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #ffff; /* Общий фон */
+}
+
+.filter-container {
+    background-color: #E7EEF7; /* Фон заголовка */
+    border: 1px solid #E7EEF7;
+    border-radius: 4px;
+    overflow: hidden;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.filter-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    cursor: pointer;
+    color: #494646;
+    font-size: 16px;
+}
+
+.filter-header:hover {
+    background-color: #dce5f5; /* Эффект наведения */
+}
+
+.arrow {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-left: 2px solid #c00;
+    border-top: 2px solid #c00;
+    transform: rotate(45deg);
+    transition: transform 0.3s ease;
+}
+
+.collapsed .arrow {
+    transform: rotate(-135deg); /* Поворот стрелки при раскрытии */
+}
+
+.filter-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background-color: #fff;
+    border-top: 1px solid #d1dae8;
+}
+
+.filter-body.open {
+    max-height: 500px; /* Достаточное значение для контента */
+}
+
+.filter-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #f1f3f6;
+    font-size: 14px;
+    color: #494646;
+}
+
+.filter-item:last-child {
+    border-bottom: none;
+}
+
+.filter-item .bullet {
+    width: 10px;
+    height: 10px;
+    background-color: #ff5b5b;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.filter-item input[type="checkbox"] {
+    margin-left: auto;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+.sidebar {
+    flex: 1;
+    background-color: #eaf1fb;
+    border: 1px solid #d1dae8;
+    border-radius: 4px;
+    padding: 10px 20px;
+    width: 426px;
+    margin-left: 1200px;
+    margin-top: 75px;
+    font-weight: 200;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    color: #494646;
+    padding-bottom: 10px;
+}
+
+.sidebar-header:hover {
+    background-color: #dce5f5;;
+}
+
+.arrow {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-left: 2px solid #c00;
+    border-top: 2px solid #c00;
+    transform: rotate(45deg);
+    transition: transform 0.3s ease;
+}
+
+.sidebar.open .arrow {
+    transform: rotate(-135deg);
+}
+
+.sidebar-body {
+    display: none;
+    padding-top: 10px;
+    background-color: #eaf1fb;
+}
+
+.sidebar.open .sidebar-body {
+    display: block;
+}
+
+.criteria-item {
+    font-size: 14px;
+    margin-bottom: 10px;    
+    color: #494646;
+    display: flex;
+    align-items: center;
+}
+
+.criteria-item .bullet {
+    width: 10px;
+    height: 10px;
+    background-color: #ff5b5b;
+    border-radius: 50%;
+    margin-right: 10px;
+}
