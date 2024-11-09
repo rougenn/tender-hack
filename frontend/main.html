@@ -27,7 +27,6 @@
 
     <script>
         function addInputField() {
-
             const list = document.getElementById("list");
             const maxFields = 8; 
             
@@ -40,24 +39,20 @@
             const listItem = document.createElement("div");
             listItem.classList.add("list-item");
 
-            
             const inputField = document.createElement("input");
             inputField.type = "text";
             inputField.placeholder = "Введите ссылку";
             inputField.classList.add("input-box");
             inputField.id = `input-${Date.now()}`; 
 
-            
             const arrow = document.createElement("span");
             arrow.classList.add("arrow");
             arrow.textContent = ">";
 
-            
             listItem.appendChild(inputField);
             listItem.appendChild(arrow);
             list.appendChild(listItem);
         }
-
 
         function checkUrls() {
             const inputs = document.querySelectorAll("input.input-box"); // Выбираем только <input>
