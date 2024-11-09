@@ -47,3 +47,32 @@ p {
   padding: 1rem 0;
 }
 
+.input {
+  box-sizing: border-box;
+  width: 1249px;
+  height: 69px;
+  background: #E7EEF7;
+  z-index: 1;
+  font-size: 30px;
+  margin-left: -250px;
+  border: none;
+}
+
+.addbutton {
+  position: relative;
+  margin-left: 998px;
+  margin-top: -350px;
+  background-color: #E7EEF7;
+  height: 69px;
+  outline: none;
+  border: none;
+  font-size: 50px;
+  z-index: 3; /* Больший z-index */
+  
+  cursor: pointer; /* Указатель при наведении */
+  
+}
+
+.addbutton:hover {
+  background-color: #d0d7e8; /* Цвет фона при наведении */
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Check</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="input-container">
+            <p class="input-box">Добавьте ваши URL </p>
+            <button class="add-button" onclick="addInputField()">+</button>
+        </div>
+        <div class="list" id="list">
+            <!-- Здесь будут добавляться новые поля ввода -->
+        </div>
+        <button class="check-button">
+            <img src="./images/Group.png" alt="" class="icon-image">Проверка по критериям
+        </button>
+    </div>
+
+    <script>
+        function addInputField() {
+            // Получаем элемент контейнера списка
+            const list = document.getElementById("list");
+
+            // Создаём новый элемент div для списка
+            const listItem = document.createElement("div");
+            listItem.classList.add("list-item");
+
+            // Создаём новое поле ввода
+            const inputField = document.createElement("input");
+            inputField.type = "text";
+            inputField.placeholder = "Введите ссылку";
+            inputField.classList.add("input-box");
+
+            // Создаём стрелку
+            const arrow = document.createElement("span");
+            arrow.classList.add("arrow");
+            arrow.textContent = ">";
+
+            // Добавляем поле ввода и стрелку в элемент списка
+            listItem.appendChild(inputField);
+            listItem.appendChild(arrow);
+
+            // Добавляем элемент списка в контейнер
+            list.appendChild(listItem);
+        }
+        function checkUrls() {
+            const inputs = document.querySelectorAll(".input-box");
+            const urls = [];
+
+            // Собираем все значения из полей ввода
+            inputs.forEach(input => {
+                if (input.value.trim()) {
+                    urls.push(input.value.trim());
+                }
+            });
+
+            if (urls.length === 0) {
+                alert("Пожалуйста, добавьте хотя бы один URL.");
+                return;
+            }
+
+            // Отправляем собранные URL на сервер
+            fetch('/api/check-urls', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ urls: urls }), // Передаем массив с URL
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Обрабатываем ответ от сервера
+                if (data.success) {
+                    alert("Проверка завершена успешно!");
+                } else {
+                    alert("Произошла ошибка при проверке URL.");
+                }
+            })
+            .catch(error => {
+                // Обработка ошибок
+                console.error('Ошибка:', error);
+                alert("Произошла ошибка при отправке запроса.");
+            });
+        }
+    </script>
+</body>
+
+</html>

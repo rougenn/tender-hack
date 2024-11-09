@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../index.css'
 
 const UrlChecker = () => {
     const [urls, setUrls] = useState(['']); // Начальное состояние с одним пустым полем
@@ -50,14 +51,15 @@ const UrlChecker = () => {
             {urls.map((url, index) => (
                 <div key={index}>
                     <input
+                        className='input'
                         type="text"
                         value={url}
                         onChange={(event) => handleChange(index, event)}
-                        placeholder="Введите ссылку"
+                        placeholder="Введите URL адрес"
                     />
                 </div>
             ))}
-            <button onClick={handleAddField}>Добавить поле ввода</button>
+            <button className = 'addbutton' onClick={handleAddField}>+</button>
             <button onClick={handleCheckAndSubmit}>проверить и отправить</button>
             {errorMessage && <p>{errorMessage}</p>} {/* Отображаем сообщение об ошибке */}
             {responses && (

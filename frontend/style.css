@@ -1,0 +1,104 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #ffffff;
+}
+
+.container {
+    width: 1280px;
+    text-align: center;
+    margin-top: -50px;
+}
+
+.input-container {
+    display: flex;
+    max-width: 1249px;
+    height: 69px;
+    align-items: center;
+    background-color: #E7EEF7;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    padding-right: 5px;
+}
+
+.input-box {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 10px;
+    background: transparent;
+    font-size: 14px;
+    color: #1A1A1A;
+    font-size: 30px;
+}
+
+.add-button {
+    border: none;
+    background: none;
+    color: #b35a5a;
+    font-size: 50px;
+    cursor: pointer;
+    padding: 0 10px;
+    transition: color 0.3s;
+}
+
+.add-button:hover {
+    color: #ff6666;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.list-item {
+    width: 76%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.arrow {
+    font-size: 18px;
+    color: #ff6666;
+}
+
+.check-button {
+    height: 50px;
+    width: 399px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 24px;
+    color: #1A1A1A;
+    background-color: #E7EEF7;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.icon-image{
+    width: 27px; /* Размер иконки */
+    height: 27px;
+    margin-right: 20px;
+}
+.check-button:hover {
+    background-color: #d0e1f2;
+}
+    

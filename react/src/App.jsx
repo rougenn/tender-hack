@@ -9,8 +9,7 @@ export default function App() {
         <section>
           <UrlChecker />
         </section>
-        <section>
-          
+        <section> 
         </section>
       </main>
     </div>
