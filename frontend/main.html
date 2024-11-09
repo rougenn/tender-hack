@@ -92,6 +92,7 @@
                 .then(data => {
                     if (data.success) {
                         alert("Проверка завершена успешно!");
+                        openNewPage(); // Переместили сюда
                     } else {
                         alert("Произошла ошибка при проверке URL.");
                     }
