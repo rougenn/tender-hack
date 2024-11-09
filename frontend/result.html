@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Результат</title>
     <link rel="stylesheet" href="result.css">
 </head>
+
 <body>
     <div class="filter-container">
         <div class="filter-header" onclick="toggleFilter(this)">
@@ -13,40 +15,43 @@
             <span class="arrow"></span>
         </div>
         <div class="filter-body">
-            <div class="filter-item">
+            <div class="filter-item" data-index="0">
                 <span class="bullet"></span>
                 <span>Совпадение наименования закупки с документацией</span>
-                <input type="checkbox" />
+                <input type="checkbox" id="filter-0" checked />
             </div>
-            <div class="filter-item">
+            <div class="filter-item" data-index="1">
                 <span class="bullet"></span>
                 <span>Обязательность указания обеспечения исполнения контракта в документации</span>
-                <input type="checkbox" />
+                <input type="checkbox" id="filter-1" checked />
             </div>
-            <div class="filter-item">
+            <div class="filter-item" data-index="2">
                 <span class="bullet"></span>
                 <span>Совпадение требований о наличии сертификатов или лицензий данных закупки</span>
-                <input type="checkbox" />
+                <input type="checkbox" id="filter-2" checked />
             </div>
-            <div class="filter-item">
+            <div class="filter-item" data-index="3">
                 <span class="bullet"></span>
-                <span>Согласованность графика и этапу поставки с документацией</span>
-                <input type="checkbox" />
+                <span>Согласованность графика по этапу поставки с документацией</span>
+                <input type="checkbox" id="filter-3" checked />
             </div>
-            <div class="filter-item">
+            <div class="filter-item" data-index="4">
                 <span class="bullet"></span>
                 <span>Соответствие цен в документации закупки</span>
-                <input type="checkbox" />
+                <input type="checkbox" id="filter-4" checked />
             </div>
-            <div class="filter-item">
+            <div class="filter-item" data-index="5">
                 <span class="bullet"></span>
                 <span>Проверка соответствия ТЗ спецификации закупки</span>
-                <input type="checkbox" />
+                <input type="checkbox" id="filter-5" checked />
             </div>
         </div>
     </div>
-    
 
+    <div id="selected-filters"></div>
+
+    <!-- Блок для отображения сообщения и массива -->
+    <div id="array-output"></div>
 
     <script>
         function toggleFilter(header) {
@@ -60,6 +65,48 @@
             const sidebar = header.parentElement;
             sidebar.classList.toggle('open');
         }
+        // Изначальный массив состояния фильтров
+        let filterStates = [0, 1, 0, 0, 1, 1]; // Пример начального массива
+
+        function initializeFilters() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+            checkboxes.forEach((checkbox, index) => {
+                checkbox.checked = true; // Все чекбоксы включены изначально
+
+                checkbox.addEventListener('change', () => {
+                    // Меняем состояние filterStates в зависимости от чекбокса
+                    filterStates[index] = checkbox.checked ? 0 : 1;
+
+                    // Проверяем массив после изменения
+                    checkAllOnes(index);
+                });
+            });
+
+            // Проверяем изначальное состояние массива
+            checkAllOnes();
+        }
+
+        function checkAllOnes(index) {
+            const outputElement = document.getElementById('array-output');
+
+            // Создаём массив без элемента с индексом index
+            const result = filterStates.slice(0, index).concat(filterStates.slice(index + 1));
+
+            // Если массив НЕ содержит 0, добавляем "Hello World"
+            if (result.includes(0)) {
+                outputElement.textContent = `Текущий массив: [${filterStates.join(', ')}]\nHello World`;
+            } else {
+                outputElement.textContent = `Текущий массив: [${filterStates.join(', ')}]`;
+            }
+        }
+
+        // Инициализируем фильтры при загрузке страницы
+        window.onload = () => {
+            initializeFilters();
+        };
+
     </script>
 </body>
+
 </html>
