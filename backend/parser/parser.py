@@ -8,40 +8,59 @@ from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup
 import time
 
-# Функция для парсинга блоков с классом "ui grid"
-def parse_ui_grid_blocks(html):
-    print(html)
+# Модифицированная функция для парсинга блоков с классом "AuctionViewSpecificationCardStyles__CardContainer-sc-1bupkfz-0"
+def parse_ui_grid_objects(html):
     # Парсим HTML с помощью BeautifulSoup
     soup = BeautifulSoup(html, "html.parser")
     
-    # Ищем все блоки с классом "ui grid"
-    grid_blocks = soup.find_all("div", class_="ui grid")
+    # Ищем все объекты с классом "AuctionViewSpecificationCardStyles__CardContainer-sc-1bupkfz-0"
+    objects = soup.find_all("div", class_="AuctionViewSpecificationCardStyles__CardContainer-sc-1bupkfz-0")
     
-    # Используем defaultdict для хранения ключ-значение пар
-    data_dict = defaultdict(list)
+    # Список для хранения характеристик каждого объекта
+    all_objects_data = []
     
-    for block in grid_blocks:
-        labels = block.find_all("label")
-        values = block.find_all("div", class_="LabeledValue-sc-10trpha-0")
+    for obj in objects:
+        # Используем defaultdict для хранения ключ-значение пар для текущего объекта
+        data_dict = defaultdict(list)
+        characteristics_count = 0  # Переменная для подсчета характеристик для текущего объекта
         
-        for label, value in zip(labels, values):
-            key = label.get_text(strip=True)
-            value_text = value.get_text(strip=True)
+        # Ищем все строки с характеристиками, пока не найдем "График поставки"
+        characteristics = obj.find_all("div", class_="LabeledValue-sc-10trpha-0")
+        
+        for characteristic in characteristics:
+            # Извлекаем текст ключа и значения
+            label = characteristic.find("label").get_text(strip=True)
+            value_div = characteristic.find("div")
+            value_text = value_div.get_text(strip=True) if value_div else ""
+            
+            # Проверяем, достигли ли мы раздела "график поставки"
+            if "график поставки" in label.lower():
+                break  # Прекращаем сбор характеристик для текущего объекта
             
             # Убираем дублирование ключа в значении
-            if value_text.startswith(key):
-                value_text = value_text[len(key):].strip()
+            if value_text.startswith(label):
+                value_text = value_text[len(label):].strip()
             
             # Удаляем символы \xa0
             value_text = value_text.replace('\xa0', '')
             
-            # Добавляем значение в data_dict
-            data_dict[key].append(value_text)
+            # Добавляем значение в data_dict и увеличиваем счетчик характеристик
+            data_dict[label].append(value_text)
+            characteristics_count += 1
+        
+        # Сохраняем данные для текущего объекта
+        all_objects_data.append({
+            "characteristics": data_dict,
+            "count": characteristics_count
+        })
 
-    # Создаем новый словарь, содержащий только каждый второй элемент для каждого ключа
-    filtered_data_dict = {key: values[::2] for key, values in data_dict.items()}
+    # Печатаем количество характеристик и их значения для каждого объекта
+    for i, obj_data in enumerate(all_objects_data, start=1):
+        print(f"Объект {i}: Количество характеристик до 'график поставки' = {obj_data['count']}")
+        print("Характеристики:", obj_data["characteristics"])
+    
+    return all_objects_data
 
-    return filtered_data_dict
 
 
 # Функция для загрузки HTML-кода страницы
@@ -81,14 +100,19 @@ def main():
 
     try:
         # URL страницы
-        url = "https://zakupki.mos.ru/auction/9864533"
+        
+        
+        
+        
+        
+        url = "https://zakupki.mos.ru/auction/9862366"
         
         # Получаем HTML-код страницы
         html_code = get_html(driver, url)
         
         # Печатаем или сохраняем HTML-код
-        parsed_data = parse_ui_grid_blocks(html_code)
-        print(parsed_data)
+        parsed_data = parse_ui_grid_objects(html_code)
+        # print(parsed_data)
         
     finally:
         # Закрываем драйвер
