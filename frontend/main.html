@@ -17,8 +17,8 @@
         <div class="list" id="list">
             <!-- Здесь будут добавляться новые поля ввода -->
         </div>
-        <button class="check-button">
-            <img src="./images/Group.png" alt="" class="icon-image">Проверка по критериям
+        <button class="check-button" onclick="handleButtonOnClick()">
+            <img src="./images/Group.png" alt="icon-image" class="icon-image">Проверка по критериям
         </button>
     </div>
 
@@ -49,44 +49,52 @@
             // Добавляем элемент списка в контейнер
             list.appendChild(listItem);
         }
-        function checkUrls() {
-            const inputs = document.querySelectorAll(".input-box");
-            const urls = [];
+        // function checkUrls() {
+        //     const inputs = document.querySelectorAll(".input-box");
+        //     const urls = [];
 
-            // Собираем все значения из полей ввода
-            inputs.forEach(input => {
-                if (input.value.trim()) {
-                    urls.push(input.value.trim());
-                }
-            });
+        //     // Собираем все значения из полей ввода
+        //     inputs.forEach(input => {
+        //         if (input.value.trim()) {
+        //             urls.push(input.value.trim());
+        //         }
+        //     });
 
-            if (urls.length === 0) {
-                alert("Пожалуйста, добавьте хотя бы один URL.");
-                return;
-            }
+        //     if (urls.length === 0) {
+        //         alert("Пожалуйста, добавьте хотя бы один URL.");
+        //         return;
+        //     }
 
-            // Отправляем собранные URL на сервер
-            fetch('/api/check-urls', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ urls: urls }), // Передаем массив с URL
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Обрабатываем ответ от сервера
-                if (data.success) {
-                    alert("Проверка завершена успешно!");
-                } else {
-                    alert("Произошла ошибка при проверке URL.");
-                }
-            })
-            .catch(error => {
-                // Обработка ошибок
-                console.error('Ошибка:', error);
-                alert("Произошла ошибка при отправке запроса.");
-            });
+        //     // Отправляем собранные URL на сервер
+        //     fetch('/api/check-urls', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify({ urls: urls }), // Передаем массив с URL
+        //     })
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         // Обрабатываем ответ от сервера
+        //         if (data.success) {
+        //             alert("Проверка завершена успешно!");
+        //         } else {
+        //             alert("Произошла ошибка при проверке URL.");
+        //         }
+        //     })
+        //     .catch(error => {
+        //         // Обработка ошибок
+        //         console.error('Ошибка:', error);
+        //         alert("Произошла ошибка при отправке запроса.");
+        //     });
+        // }
+        function openNewPage() {
+            window.location.href = "result.html";
+        }
+
+        function handleButtonOnClick(){
+            // checkUrls();
+            openNewPage();
         }
     </script>
 </body>

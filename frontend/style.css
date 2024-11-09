@@ -39,6 +39,7 @@ body {
     font-size: 14px;
     color: #1A1A1A;
     font-size: 30px;
+    margin-left: 100px;
 }
 
 .add-button {
@@ -83,7 +84,7 @@ body {
     align-items: center;
     justify-content: center;
     margin-top: 20px;
-    padding: 10px 20px;
+    padding: 10px 15px;
     font-size: 24px;
     color: #1A1A1A;
     background-color: #E7EEF7;
@@ -96,7 +97,7 @@ body {
 .icon-image{
     width: 27px; /* Размер иконки */
     height: 27px;
-    margin-right: 20px;
+    margin-right: 35px;
 }
 .check-button:hover {
     background-color: #d0e1f2;
