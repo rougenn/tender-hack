@@ -10,13 +10,13 @@
 <body>
     <div class="container">
         <div class="input-container">
-            <p class="input-box">Добавьте ваши URL </p>
+            <p class="input-box">Добавьте ваши URL</p>
             <button class="add-button" onclick="addInputField()">+</button>
         </div>
         <div class="list" id="list">
             <!-- Здесь будут добавляться новые поля ввода -->
         </div>
-        <button class="check-button" onclick="handleButtonOnClick()">
+        <button class="check-button" onclick="checkUrls()">
             <img src="./images/Group.png" alt="icon-image" class="icon-image">Проверка по критериям
         </button>
         <button class="check-button tosearch" onclick="toNewPage()">
@@ -24,8 +24,7 @@
         </button>
     </div>
 
-
-<script>
+    <script>
         function addInputField() {
             const list = document.getElementById("list");
             const maxFields = 8; 
@@ -55,64 +54,28 @@
         }
 
         function checkUrls() {
-            const inputs = document.querySelectorAll("input.input-box"); // Выбираем только <input>
+            const inputs = document.querySelectorAll("input.input-box");
             const urls = [];
 
-            console.log("Все найденные элементы:", inputs);
-
-            inputs.forEach((input, index) => {
-                console.log(`Элемент ${index}:`, input);
-                if (input && input.value !== undefined) {
-                    urls.push(input.value.trim());
-                } else {
-                    console.error(`Ошибка: элемент ${index} не имеет свойства value`, input);
+            inputs.forEach((input) => {
+                if (input && input.value.trim() !== "") {
+                    urls.push(encodeURIComponent(input.value.trim()));
                 }
             });
-
-            console.log("Собранные URL:", urls);
 
             if (urls.length === 0) {
                 alert("Пожалуйста, добавьте хотя бы один URL.");
                 return;
             }
 
-            fetch('http://localhost:8090/analyze-links', {
-                method: 'POST',
-                body: JSON.stringify({ urls: urls }),
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Ошибка сервера: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert("Проверка завершена успешно!");
-                        openNewPage(); // Переместили сюда
-                    } else {
-                        alert("Произошла ошибка при проверке URL.");
-                    }
-                })
-                .catch(error => {
-                    console.error('Ошибка:', error);
-                    alert("Произошла ошибка при отправке запроса.");
-                });
+            // Переходим на страницу result.html с переданными URL
+            const queryString = urls.map((url, index) => `url${index}=${url}`).join("&");
+            window.location.href = `result.html?${queryString}`;
         }
 
         function toNewPage() {
             window.location.href = "searchpage.html";
         }
-
-        function openNewPage() {
-            window.location.href = "result.html";
-        }
-
-        function handleButtonOnClick() {
-            checkUrls();
-            openNewPage();
-        }
     </script>
 </body>
-
 </html>
