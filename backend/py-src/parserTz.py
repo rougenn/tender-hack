@@ -1,78 +1,88 @@
-import csv
 from docx import Document
+import re
 
-def load_docx(doc_path):
+def clean_text(text):
     """
-    Загрузить документ .docx.
-    :param doc_path: Путь к файлу .docx.
-    :return: Объект документа.
+    Убирает лишние символы, такие как неразрывные пробелы (\xa0) и переводы строк (\n).
     """
-    try:
-        return Document(doc_path)
-    except Exception as e:
-        raise FileNotFoundError(f"Ошибка при загрузке документа: {e}")
+    text = text.replace('\xa0', ' ')  # Заменяем неразрывный пробел на обычный
+    text = text.replace('\n', ' ')  # Убираем переводы строк
+    text = re.sub(r'\s+', ' ', text.strip())  # Убираем лишние пробелы
+    return text.strip()
 
-def process_tables(document):
+def parse_characteristics(characteristics_text):
     """
-    Обработать таблицы из документа и извлечь данные.
-    :param document: Объект документа.
-    :return: Список строк данных.
+    Разбивает строку характеристик на ключ-значение.
     """
-    data = []
-    for table in document.tables:
-        for row in table.rows:
-            cells = [cell.text.strip() if cell.text.strip() else "N/A" for cell in row.cells]
+    characteristics = {}
+    pairs = re.split(r'(?<!:)\s*([А-Я][^:]*):', characteristics_text)  # Разбивает по шаблону "Ключ: значение"
+    for i in range(1, len(pairs), 2):  # Пропускаем пустые части
+        key = clean_text(pairs[i])
+        value = clean_text(pairs[i + 1]) if i + 1 < len(pairs) else ''
+        characteristics[key] = value
+    return characteristics
 
-            # Пропускаем строки с недостаточным количеством ячеек
-            if len(cells) < 4:
+def parse_tz_docx(file_path):
+    """
+    Функция для обработки ТЗ в формате DOCX и извлечения необходимых данных.
+    """
+    doc = Document(file_path)
+    data = {
+        "contract": 0,  # По умолчанию "обеспечение контракта" отсутствует
+        "law": "44-ФЗ",  # Закон, согласно которому происходит заключение
+        "deadlines": None,  # Сроки поставки (если указаны)
+        "products": []  # Список товаров
+    }
+
+    # Проверка общего текста документа
+    for paragraph in doc.paragraphs:
+        text = paragraph.text.strip()
+        
+        # Проверка на наличие обязательства обеспечения контракта
+        if "обеспечение исполнения контракта" in text.lower():
+            data["contract"] = 1
+
+        # Извлечение информации о сроках поставки
+        deadlines_match = re.search(r"срок поставки.*?(\d+)\s*(дней|дня|суток)", text.lower())
+        if deadlines_match:
+            data["deadlines"] = deadlines_match.group(1)
+
+    # Парсинг таблиц для извлечения товаров и их характеристик
+    for table in doc.tables:
+        headers = []  # Список заголовков таблицы (первой строки)
+        for i, row in enumerate(table.rows):
+            cells = [clean_text(cell.text) for cell in row.cells]
+
+            # Если это первая строка, предполагаем, что это заголовки
+            if i == 0:
+                headers = [header.lower() for header in cells]  # Приводим заголовки к нижнему регистру
                 continue
 
-            # Извлечение данных
-            row_data = [
-                cells[1] if len(cells) > 1 else "N/A",  # Наименование
-                cells[2] if len(cells) > 2 else "N/A",  # Кол-во
-                cells[3] if len(cells) > 3 else "N/A"   # Характеристика
-            ]
+            # Иначе обрабатываем как строки данных
+            if len(cells) > 1:  # Игнорируем пустые строки
+                product = {}
+                for j, cell in enumerate(cells):
+                    if j < len(headers):  # Убедимся, что индекс в рамках заголовков
+                        key = headers[j]
+                        product[key] = cell
 
-            # Добавляем строку в данные, если она содержит полезную информацию
-            if any(value != "N/A" for value in row_data):
-                data.append(row_data)
+                # Преобразуем каждую характеристику в ключ-значение
+                if "наименование" in product and "кол-во" in product:
+                    formatted_product = {
+                        "name": product.get("наименование", "Не указано"),
+                        "quantity": product.get("кол-во", "0")
+                    }
+
+                    # Разбиваем характеристики на отдельные ключи, если они есть
+                    if "характеристика" in product:
+                        characteristics = parse_characteristics(product["характеристика"])
+                        formatted_product.update(characteristics)
+
+                    # Добавляем остальные параметры
+                    for key, value in product.items():
+                        if key not in ["наименование", "кол-во", "характеристика"]:
+                            formatted_product[key] = value
+
+                    data["products"].append(formatted_product)
+
     return data
-
-def save_to_csv(data, csv_path):
-    """
-    Сохранить данные в файл CSV.
-    :param data: Список строк данных.
-    :param csv_path: Путь для сохранения CSV файла.
-    """
-    try:
-        with open(csv_path, mode='w', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
-            writer.writerows(data)
-        print(f"Данные успешно сохранены в {csv_path}")
-    except Exception as e:
-        raise IOError(f"Ошибка при сохранении данных в CSV: {e}")
-
-def main(doc_path, csv_path):
-    """
-    Основная функция для обработки документа и сохранения данных.
-    :param doc_path: Путь к входному файлу .docx.
-    :param csv_path: Путь для сохранения выходного CSV.
-    """
-    try:
-        # Загрузка документа
-        document = load_docx(doc_path)
-
-        # Обработка таблиц и извлечение данных
-        data = process_tables(document)
-
-        # Сохранение данных в CSV
-        save_to_csv(data, csv_path)
-    except Exception as e:
-        print(f"Произошла ошибка: {e}")
-
-# Пример вызова
-if __name__ == "__main__":
-    doc_path = "path/to/your/document.docx"  # Задайте путь к вашему .docx
-    csv_path = "path/to/output.csv"         # Задайте путь для сохранения CSV
-    main(doc_path, csv_path)

@@ -1,126 +1,55 @@
 import pdfplumber
 import re
 
-def extract_text(pdf_path):
+def extract_text_from_pdf(file_path):
     """
-    Extracts text from a PDF.
+    Extracts text from a PDF file.
     """
-    try:
-        full_text = ""
-        with pdfplumber.open(pdf_path) as pdf:
-            for page in pdf.pages:
-                text = page.extract_text()
-                if text:
-                    full_text += text + "\n"
-        return full_text
-    except Exception as e:
-        print(f"Error: {e}")
-        return ""
+    full_text = ""
+    with pdfplumber.open(file_path) as pdf:
+        for page in pdf.pages:
+            page_text = page.extract_text()
+            if page_text:
+                full_text += page_text + "\n"
+    return full_text
 
-def find_section_by_regex(text, patterns):
+def parse_contract_details(text):
     """
-    Finds text of a section based on regex patterns.
+    Parses contract details and product information from the given text.
     """
-    for pattern in patterns:
-        match = re.search(pattern, text, re.IGNORECASE)
-        if match:
-            start = match.start()
-            end = start + 2000  # Limit output to 2000 characters
-            return text[start:end].strip()
-    return None
-
-def parse_specification(text):
-    """
-    Extracts the entire specification text based on a keyword search.
-    """
-    spec_pattern = r"(Спецификация.*?)(Приложение|Конец|$)"
-    match = re.search(spec_pattern, text, re.DOTALL | re.IGNORECASE)
-    if match:
-        return match.group(1).strip()
-    return "Спецификация не найдена"
-
-def parse_pdf_criteria(pdf_path):
-    """
-    Parses the PDF and returns extracted data by criteria.
-    """
-    # Extract text from PDF
-    text = extract_text(pdf_path)
-    if not text:
-        print(f"Unable to extract text from file: {pdf_path}")
-        return {}
-
-    # Define patterns for section search
-    section_patterns = {
-        "Статья 1": [r"Статья 1[:\.\s]", r"1\.\s"],
-        "Статья 2": [r"Статья 2[:\.\s]", r"2\.\s"],
-        "Статья 3": [r"Статья 3[:\.\s]", r"3\.\s"],
-        "Статья 4": [r"Статья 4[:\.\s]", r"4\.\s"],
-        "Статья 6": [r"Статья 6[:\.\s]", r"6\.\s"],
-        "Статья 7": [r"Статья 7[:\.\s]", r"7\.\s"],
-    }
-
-    # Collect results for each criterion
-    results = {
-        "1": text.split("\n")[0].strip() if text else "Не найдено",  # Document title
-        "2": "Не требуется",  # Criterion 2 is fixed
-        "3": {
-            "Статья 4": find_section_by_regex(text, section_patterns["Статья 4"]),
-            "Статья 6": find_section_by_regex(text, section_patterns["Статья 6"]),
-        },
-        "4": {
-            "Статья 3": find_section_by_regex(text, section_patterns["Статья 3"]),
-            "Статья 4": find_section_by_regex(text, section_patterns["Статья 4"]),
-        },
-        "5": {
-            "Статья 2": find_section_by_regex(text, section_patterns["Статья 2"]),
-            "Статья 7": find_section_by_regex(text, section_patterns["Статья 7"]),
-        },
-        "6": {
-            "Статья 1": find_section_by_regex(text, section_patterns["Статья 1"]),
-            "Статья 4": find_section_by_regex(text, section_patterns["Статья 4"]),
-            "Статья 6": find_section_by_regex(text, section_patterns["Статья 6"]),
-            "Спецификация": parse_specification(text),
+    # Determine if the contract requires assurance
+    contract_assurance = 1 if "обеспечение исполнения" in text.lower() else 0
+    
+    # Extract deadline (e.g., "в течение 10 рабочих дней")
+    deadline_match = re.search(r"в течение\s+(\d+)\s+(рабочих|календарных)\s+дней", text, re.IGNORECASE)
+    deadlines = f"до {deadline_match.group(1)} дней" if deadline_match else None
+    
+    # Extract product details
+    product_pattern = re.compile(r"(\d+)\s+(Шпагат джутовый.*)", re.IGNORECASE)
+    products = []
+    for match in re.finditer(product_pattern, text):
+        product_name = match.group(2).strip()
+        product = {
+            "name": product_name,
+            "price": None,  # Assuming no explicit price
+            "кол-во": match.group(1)
         }
+        products.append(product)
+    
+    # Ensure products list is None if empty
+    products = products if products else None
+    
+    # Compile the final dictionary
+    return {
+        "contract": contract_assurance,
+        "law": "44-ФЗ",
+        "deadlines": deadlines,
+        "products": products
     }
 
-    # Remove duplicate sections
-    for criterion, sections in results.items():
-        if isinstance(sections, dict):
-            unique_sections = {}
-            seen_texts = set()
-            for section, content in sections.items():
-                if content and content not in seen_texts:
-                    unique_sections[section] = content
-                    seen_texts.add(content)
-            results[criterion] = unique_sections
-
-    return results
-
-def print_results(results):
+def extract_contract_details_from_pdf(file_path):
     """
-    Prints the parsed results, avoiding repeating the same content.
+    Reads a PDF file and returns extracted contract details as a dictionary.
     """
-    seen_texts = set()
-    for criterion, data in results.items():
-        print(f"Критерий {criterion}:")
-        if isinstance(data, dict):
-            for section, content in data.items():
-                if content and content not in seen_texts:
-                    print(f"  {section}:\n{content}\n")
-                    seen_texts.add(content)
-        else:
-            if data not in seen_texts:
-                print(f"  {data}")
-                seen_texts.add(data)
-        print("-" * 80)
-
-def main():
-    """
-    Main function.
-    """
-    pdf_path = input("Введите путь к PDF-файлу: ").strip()
-    results = parse_pdf_criteria(pdf_path)
-    print_results(results)
-
-if __name__ == "__main__":
-    main()
+    text = extract_text_from_pdf(file_path)
+    return parse_contract_details(text)
