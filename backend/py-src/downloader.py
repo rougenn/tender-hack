@@ -98,10 +98,14 @@ def download_files(html, base_url, download_folder="downloads"):
     return tz_path, project_contract_path
 
 if __name__ == "__main__":
+    # Конфигурация опций Chrome
     options = Options()
-    options.headless = True
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--headless")  # Запуск без графического интерфейса
+    options.add_argument("--no-sandbox")  # Устранение проблем с доступом
+    options.add_argument("--disable-dev-shm-usage")  # Оптимизация памяти
+    options.add_argument("--disable-gpu")  # Отключение GPU для стабильности
+    options.add_argument("--log-level=3")  # Скрытие подробных логов Selenium
+    options.add_argument("--window-size=1920,1080")  # Установка размера окна, даже в headless-режиме
 
     service = Service("/usr/local/bin/chromedriver")
     driver = webdriver.Chrome(service=service, options=options)

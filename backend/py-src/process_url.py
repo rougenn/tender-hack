@@ -24,10 +24,16 @@ def process_url(url):
         from selenium.webdriver.chrome.options import Options
         from selenium.webdriver.chrome.service import Service
 
+        # Настройки headless-режима
         options = Options()
-        options.headless = True
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--headless")  # Запуск без графического интерфейса
+        options.add_argument("--no-sandbox")  # Устранение проблем с доступом
+        options.add_argument("--disable-dev-shm-usage")  # Оптимизация памяти
+        options.add_argument("--disable-gpu")  # Отключение GPU для стабильности
+        options.add_argument("--log-level=3")  # Уменьшение уровня логов
+        options.add_argument("--window-size=1920,1080")  # Установка размера окна для headless
+
+        # Запуск драйвера
         service = Service("/usr/local/bin/chromedriver")
         driver = webdriver.Chrome(service=service, options=options)
 
@@ -83,8 +89,3 @@ def process_url(url):
 
     # Вернуть результат
     return url, analysis_results
-
-if __name__ == "__main__":
-    url = "https://zakupki.mos.ru/auction/9864884"
-    result = process_url(url)
-    print(json.dumps(result, ensure_ascii=False, indent=2))
