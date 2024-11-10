@@ -1,65 +1,124 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Результат</title>
     <link rel="stylesheet" href="result.css">
+    
+        
 </head>
+
 <body>
-    <div class="filter-container">
+    <div class="filter-container" id="global-filter-container">
         <div class="filter-header" onclick="toggleFilter(this)">
-            <span>Фильтр критериев</span>
-            <span class="arrow"></span>
+            Глобальный фильтр критериев
         </div>
-        <div class="filter-body">
-            <div class="filter-item">
-                <span class="bullet"></span>
+        <div class="filter-body" id="global-filter-body">
+            <div class="filter-item" data-index="0">
                 <span>Совпадение наименования закупки с документацией</span>
-                <input type="checkbox" />
+                <input type="checkbox" id="filter-0" checked />
             </div>
-            <div class="filter-item">
-                <span class="bullet"></span>
+            <div class="filter-item" data-index="1">
                 <span>Обязательность указания обеспечения исполнения контракта в документации</span>
-                <input type="checkbox" />
+                <input type="checkbox" id="filter-1" checked />
             </div>
-            <div class="filter-item">
-                <span class="bullet"></span>
+            <div class="filter-item" data-index="2">
                 <span>Совпадение требований о наличии сертификатов или лицензий данных закупки</span>
-                <input type="checkbox" />
+                <input type="checkbox" id="filter-2" checked />
             </div>
-            <div class="filter-item">
-                <span class="bullet"></span>
-                <span>Согласованность графика и этапу поставки с документацией</span>
-                <input type="checkbox" />
+            <div class="filter-item" data-index="3">
+                <span>Согласованность графика по этапу поставки с документацией</span>
+                <input type="checkbox" id="filter-3" checked />
             </div>
-            <div class="filter-item">
-                <span class="bullet"></span>
+            <div class="filter-item" data-index="4">
                 <span>Соответствие цен в документации закупки</span>
-                <input type="checkbox" />
+                <input type="checkbox" id="filter-4" checked />
             </div>
-            <div class="filter-item">
-                <span class="bullet"></span>
+            <div class="filter-item" data-index="5">
                 <span>Проверка соответствия ТЗ спецификации закупки</span>
-                <input type="checkbox" />
+                <input type="checkbox" id="filter-5" checked />
             </div>
         </div>
     </div>
-    
-
+    <div id="links-container"></div>
 
     <script>
-        function toggleFilter(header) {
-            const filterContainer = header.parentElement;
-            const filterBody = filterContainer.querySelector('.filter-body');
+        const backendData = [
+            { url: "https://example.com/1", criteria: [0, 1, 0, 0, 1, 1] },
+            { url: "https://example.com/2", criteria: [1, 1, 1, 0, 0, 1] },
+            { url: "https://example.com/3", criteria: [1, 1, 1, 1, 1, 1] },
+        ];
 
-            filterBody.classList.toggle('open');
-            header.classList.toggle('collapsed');
+        let globalFilterStates = Array(backendData[0].criteria.length).fill(0);
+
+        function initializeGlobalFilter(container) {
+            const checkboxes = container.querySelectorAll("input[type='checkbox']");
+
+            checkboxes.forEach((checkbox, index) => {
+                checkbox.addEventListener("change", () => {
+                    globalFilterStates[index] = checkbox.checked ? 0 : null;
+                    updateAllLinks();
+                });
+            });
         }
-        function toggleSidebar(header) {
-            const sidebar = header.parentElement;
-            sidebar.classList.toggle('open');
+
+        function initializeLinks(container) {
+            backendData.forEach((linkData) => {
+                const { url } = linkData;
+
+                const linkContainer = document.createElement("div");
+                linkContainer.className = "filter-container";
+
+                linkContainer.innerHTML = `
+                    <div class="filter-header">
+                        <span>Ссылка: ${url}</span>
+                    </div>
+                    <div class="link-container" id="link-output-${url.replace(/[^a-zA-Z0-9]/g, '')}"></div>
+                `;
+
+                container.appendChild(linkContainer);
+                updateLink(linkData, linkContainer.querySelector(`#link-output-${url.replace(/[^a-zA-Z0-9]/g, '')}`));
+            });
         }
+
+        function updateAllLinks() {
+            backendData.forEach((linkData) => {
+                const linkOutput = document.querySelector(
+                    `#link-output-${linkData.url.replace(/[^a-zA-Z0-9]/g, '')}`
+                );
+                updateLink(linkData, linkOutput);
+            });
+        }
+
+        function updateLink(linkData, linkOutput) {
+            const { url, criteria } = linkData;
+
+            const filteredStates = criteria
+                .map((state, index) => (globalFilterStates[index] === null ? null : state))
+                .filter((state) => state !== null);
+
+            const showLink = filteredStates.includes(0);
+
+            linkOutput.innerHTML = showLink
+                ? `<a href="${url}" target="_blank">Перейти по ссылке</a>`
+                : "";
+        }
+
+        function toggleFilter(header) {
+            const filterBody = header.nextElementSibling;
+            filterBody.classList.toggle("open");
+        }
+
+        window.onload = () => {
+            const globalFilterContainer = document.getElementById("global-filter-container");
+            const linksContainer = document.getElementById("links-container");
+
+            initializeGlobalFilter(globalFilterContainer);
+            initializeLinks(linksContainer);
+        };
     </script>
 </body>
+
 </html>

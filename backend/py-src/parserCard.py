@@ -218,5 +218,19 @@ if __name__ == "__main__":
     # Преобразование данных
     transformed_data = transform_data(parsed_data)
 
+<<<<<<< HEAD
+    print("\nПродукты:")
+    for product in parsed_data["Продукты"]:
+        print("\nПродукт:")
+        for key, value in product.items():
+            if key == "Характеристики":
+                print(f"  {key}:")
+                for char_key, char_value in value.items():
+                    print(f"    {char_key}: {char_value}")
+            else:
+                print(f"  {key}: {value}")
+    
+=======
     # Вывод преобразованных данных
     print(json.dumps(transformed_data, ensure_ascii=False, indent=2))
+>>>>>>> 8e5f133387c7c36ca4ebea41a879cfc752a58d61

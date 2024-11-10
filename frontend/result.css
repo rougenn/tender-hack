@@ -82,4 +82,65 @@ body {
     height: 16px;
     cursor: pointer;
 }
+.link-container {
+    margin: 15px;
+    font-size: 16px;
+}
+
+.link-container a {
+    color: #E7EEF7;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.link-container a:hover {
+    text-decoration: underline;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.filter-container {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter-header {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.filter-body {
+    display: block;
+}
+
+.filter-item {
+    margin-bottom: 10px;
+}
+
+.link-container {
+    margin-top: 10px;
+}
+
+.link-container a {
+    font-size: 16px;
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.link-container a:hover {
+    text-decoration: underline;
+}
 
