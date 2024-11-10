@@ -6,9 +6,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Результат</title>
     <link rel="stylesheet" href="result.css">
+    <style>
+        /* Стили для блоков ссылок */
+        .filter-container.link-item {
+            background: linear-gradient(135deg, #ffffff, #f3f8ff);
+            border: 1px solid #d6e4ff;
+            border-radius: 8px;
+            margin: 20px 0;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .filter-container.link-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Заголовок ссылки (теперь кликабельный) */
+        .filter-container .filter-header a {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2a4b8d;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .filter-container .filter-header a:hover {
+            color: #1d3570;
+            text-decoration: underline;
+        }
+
+        /* Контейнер для критериев */
+        .criteria-container {
+            margin-top: 15px;
+        }
+
+        /* Ошибки критериев */
+        .criteria-error {
+            color: #d32f2f;
+            font-size: 14px;
+            margin: 5px 0;
+            background: rgba(211, 47, 47, 0.1);
+            border-left: 4px solid #d32f2f;
+            padding: 5px 10px;
+            border-radius: 4px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        /* Анимация появления ошибок */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Анимация загрузки */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Анимация загрузки -->
+    <div class="loading-overlay" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Контейнер фильтров -->
     <div class="filter-container" id="global-filter-container">
         <div class="filter-header" onclick="toggleFilter(this)">
             Глобальный фильтр критериев
@@ -40,11 +146,12 @@
             </div>
         </div>
     </div>
+
     <div id="links-container"></div>
 
     <script>
-        let backendData = [];
-        let globalFilterStates = [];
+        let backendData = []; // Данные, полученные от сервера
+        let globalFilterStates = []; // Состояния фильтров (1 - активный, 0 - неактивный)
 
         function getUrlsFromQueryParams() {
             const params = new URLSearchParams(window.location.search);
@@ -57,6 +164,16 @@
             return urls;
         }
 
+        function showLoading() {
+            const loadingElement = document.getElementById("loading");
+            loadingElement.classList.add("active");
+        }
+
+        function hideLoading() {
+            const loadingElement = document.getElementById("loading");
+            loadingElement.classList.remove("active");
+        }
+
         async function fetchBackendData() {
             const urls = getUrlsFromQueryParams();
 
@@ -64,6 +181,8 @@
                 alert("Нет URL для обработки.");
                 return;
             }
+
+            showLoading(); // Показываем анимацию загрузки
 
             try {
                 const response = await fetch("http://localhost:8090/analyze-links", {
@@ -81,68 +200,86 @@
                 backendData = await response.json();
 
                 // Инициализируем фильтры и ссылки
-                globalFilterStates = Array(backendData[0].criteria.length).fill(0);
-                const globalFilterContainer = document.getElementById("global-filter-container");
-                const linksContainer = document.getElementById("links-container");
-
-                initializeGlobalFilter(globalFilterContainer);
-                initializeLinks(linksContainer);
+                globalFilterStates = Array(backendData[0].criteria.length).fill(1); // По умолчанию все фильтры активны
+                initializeGlobalFilter();
+                renderLinks(); // Отображение ссылок
+                updateAllLinks(); // Применение фильтров
             } catch (error) {
                 console.error("Ошибка при загрузке данных:", error);
+            } finally {
+                hideLoading(); // Скрываем анимацию загрузки
             }
         }
 
-        function initializeGlobalFilter(container) {
-            const checkboxes = container.querySelectorAll("input[type='checkbox']");
+        function initializeGlobalFilter() {
+            const checkboxes = document.querySelectorAll("#global-filter-body input[type='checkbox']");
 
             checkboxes.forEach((checkbox, index) => {
                 checkbox.addEventListener("change", () => {
-                    globalFilterStates[index] = checkbox.checked ? 0 : null;
-                    updateAllLinks();
+                    globalFilterStates[index] = checkbox.checked ? 1 : 0;
+                    updateAllLinks(); // Обновляем видимость ссылок и их критерии при изменении фильтров
                 });
             });
         }
 
-        function initializeLinks(container) {
-            backendData.forEach((linkData) => {
-                const { url } = linkData;
+        function renderLinks() {
+            const container = document.getElementById("links-container");
+            container.innerHTML = ""; // Очищаем контейнер перед добавлением новых ссылок
+            backendData.forEach((linkData, index) => {
+                const { url, criteria } = linkData;
 
                 const linkContainer = document.createElement("div");
-                linkContainer.className = "filter-container";
+                linkContainer.className = "filter-container link-item";
+                linkContainer.id = `link-item-${index}`; // Уникальный ID на основе индекса
 
                 linkContainer.innerHTML = `
                     <div class="filter-header">
-                        <span>Невалидная карточка</span>
+                        <a href="${url}" target="_blank">${url}</a>
                     </div>
-                    <div class="link-container" id="link-output-${url.replace(/[^a-zA-Z0-9]/g, '')}"></div>
+                    <div class="criteria-container" id="criteria-${index}">
+                        <!-- Ошибки будут добавляться сюда -->
+                    </div>
                 `;
 
                 container.appendChild(linkContainer);
-                updateLink(linkData, linkContainer.querySelector(`#link-output-${url.replace(/[^a-zA-Z0-9]/g, '')}`));
             });
         }
 
         function updateAllLinks() {
-            backendData.forEach((linkData) => {
-                const linkOutput = document.querySelector(
-                    `#link-output-${linkData.url.replace(/[^a-zA-Z0-9]/g, '')}`
-                );
-                updateLink(linkData, linkOutput);
+            backendData.forEach((linkData, index) => {
+                const { criteria } = linkData;
+                const linkElement = document.getElementById(`link-item-${index}`); // Уникальный ID
+                const criteriaContainer = document.getElementById(`criteria-${index}`);
+
+                if (shouldShowLink(criteria)) {
+                    linkElement.style.display = "block";
+                    updateCriteriaDisplay(criteria, criteriaContainer); // Обновляем отображение критериев
+                } else {
+                    linkElement.style.display = "none";
+                }
             });
         }
 
-        function updateLink(linkData, linkOutput) {
-            const { url, criteria } = linkData;
+        function updateCriteriaDisplay(criteria, container) {
+            container.innerHTML = ""; // Очищаем контейнер перед обновлением
+            criteria.forEach((value, index) => {
+                if (globalFilterStates[index] === 1 && value === 0) {
+                    const errorElement = document.createElement("div");
+                    errorElement.className = "criteria-error";
+                    errorElement.textContent = `Ошибка по критерию ${index + 1}`;
+                    container.appendChild(errorElement);
+                }
+            });
+        }
 
-            const filteredStates = criteria
-                .map((state, index) => (globalFilterStates[index] === null ? null : state))
-                .filter((state) => state !== null);
-
-            const showLink = filteredStates.includes(0);
-
-            linkOutput.innerHTML = showLink
-                ? `<a href="${url}" target="_blank">reference</a>`
-                : "";
+        function shouldShowLink(criteria) {
+            // Проверяем, подходит ли ссылка под активные фильтры
+            for (let i = 0; i < globalFilterStates.length; i++) {
+                if (globalFilterStates[i] === 1 && criteria[i] === 0) {
+                    return true; // Ссылка подходит, если хотя бы один активный фильтр имеет значение 0
+                }
+            }
+            return false; // Если все активные фильтры пройдены (1), скрываем ссылку
         }
 
         function toggleFilter(header) {
