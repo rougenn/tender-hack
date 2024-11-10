@@ -46,15 +46,41 @@
         let backendData = [];
         let globalFilterStates = [];
 
+        function getUrlsFromQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            const urls = [];
+            for (const [key, value] of params) {
+                if (key.startsWith("url")) {
+                    urls.push(decodeURIComponent(value));
+                }
+            }
+            return urls;
+        }
+
         async function fetchBackendData() {
+            const urls = getUrlsFromQueryParams();
+
+            if (urls.length === 0) {
+                alert("Нет URL для обработки.");
+                return;
+            }
+
             try {
-                const response = await fetch("https://example.com/api/links"); // Замените на ваш реальный URL API
+                const response = await fetch("http://localhost:8090/analyze-links", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ urls: urls }),
+                });
+
                 if (!response.ok) {
                     throw new Error("Ошибка при загрузке данных с сервера");
                 }
+
                 backendData = await response.json();
 
-                // Инициализируем глобальные фильтры и ссылки
+                // Инициализируем фильтры и ссылки
                 globalFilterStates = Array(backendData[0].criteria.length).fill(0);
                 const globalFilterContainer = document.getElementById("global-filter-container");
                 const linksContainer = document.getElementById("links-container");
