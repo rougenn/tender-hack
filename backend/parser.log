@@ -34,3 +34,100 @@
 2024-11-09 23:46:56,263 - INFO - Параметры страницы: {'Условия исполнения контракта': 'Обязательное электронное исполнение с использованием УПД', 'Обеспечение исполнения контракта': 'Требуется', 'Заказчик': 'ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ ГОРОДА МОСКВЫ «САОРАЗВИТИЕ»', 'Заключение происходит в соответствии с законом': '44-ФЗ', 'Даты проведения': ' 08.11.2024 10:30:03 — 08 November 2024, 17:01:56'}
 2024-11-09 23:46:56,263 - INFO - Начало парсинга данных о продуктах.
 2024-11-09 23:46:56,273 - INFO - Парсинг завершен. Найдено продуктов: 1
+2024-11-10 03:47:40,866 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 03:47:49,119 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 03:50:47,166 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 03:51:01,442 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 03:56:26,091 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 03:56:31,511 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 03:57:50,220 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 03:58:00,529 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:00:24,681 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 04:00:29,748 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:00:58,405 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 04:01:03,562 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:04:26,942 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 04:04:31,619 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:08:26,233 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 04:08:31,481 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:08:31,502 - INFO - Найдена ссылка: /ru
+2024-11-10 04:08:31,502 - INFO - Найдена ссылка: /knowledgebase/main
+2024-11-10 04:08:31,502 - INFO - Найдена ссылка: /purchase/list
+2024-11-10 04:08:31,502 - INFO - Найдена ссылка: /companyProfile/customer/1179557
+2024-11-10 04:08:31,502 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376302
+2024-11-10 04:08:31,502 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376306
+2024-11-10 04:08:31,502 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376314
+2024-11-10 04:08:31,502 - INFO - Найдена ссылка: /companyProfile/supplier/28150412
+2024-11-10 04:08:31,502 - INFO - Найдена ссылка: /about
+2024-11-10 04:08:31,502 - INFO - Найдена ссылка: https://old.zakupki.mos.ru/#/news
+2024-11-10 04:08:31,502 - INFO - Найдена ссылка: /knowledgebase/main
+2024-11-10 04:08:31,503 - INFO - Найдена ссылка: /sitemap
+2024-11-10 04:08:31,503 - INFO - Найдена ссылка: https://www.mos.ru/tender/
+2024-11-10 04:08:31,503 - INFO - Найдена ссылка: https://www.mos.ru/tender/
+2024-11-10 04:08:31,503 - INFO - Найдена ссылка: https://www.mos.ru/dit/
+2024-11-10 04:08:31,503 - INFO - Найдена ссылка: https://www.mos.ru/dit/
+2024-11-10 04:08:31,503 - INFO - Найдена ссылка: https://www.mos.ru/tender/
+2024-11-10 04:08:31,503 - INFO - Найдена ссылка: https://www.mos.ru/dit/
+2024-11-10 04:08:31,503 - INFO - Найдена ссылка: https://t.me/Supplier_Portal
+2024-11-10 04:08:31,503 - INFO - Найдена ссылка: https://old.zakupki.mos.ru/#/updates
+2024-11-10 04:10:31,555 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 04:10:36,467 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:12:53,613 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 04:12:58,347 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:12:58,369 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376302, текст: 5-й новоподмосковный, д.4, корп.1 (1) (1).xlsx
+2024-11-10 04:12:58,369 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376306, текст: техническое+задание (2).docx
+2024-11-10 04:12:58,369 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376314, текст: проект контракта.pdf
+2024-11-10 04:14:58,917 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 04:15:03,786 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:15:43,401 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 04:15:48,616 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:15:48,638 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376302, текст: 5-й новоподмосковный, д.4, корп.1 (1) (1).xlsx
+2024-11-10 04:15:48,639 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376306, текст: техническое+задание (2).docx
+2024-11-10 04:15:48,639 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376314, текст: проект контракта.pdf
+2024-11-10 04:18:02,653 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 04:18:07,416 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:18:07,443 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376302, текст: 5-й новоподмосковный, д.4, корп.1 (1) (1).xlsx
+2024-11-10 04:18:07,443 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376306, текст: техническое+задание (2).docx
+2024-11-10 04:18:07,443 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376314, текст: проект контракта.pdf
+2024-11-10 04:18:38,359 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 04:18:43,699 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:18:43,723 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376302, текст: 5-й новоподмосковный, д.4, корп.1 (1) (1).xlsx
+2024-11-10 04:18:43,723 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376306, текст: техническое+задание (2).docx
+2024-11-10 04:18:43,723 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376314, текст: проект контракта.pdf
+2024-11-10 04:20:14,158 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 04:20:19,256 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:20:19,283 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376302, текст: 5-й новоподмосковный, д.4, корп.1 (1) (1).xlsx
+2024-11-10 04:20:19,283 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376306, текст: техническое+задание (2).docx
+2024-11-10 04:20:19,283 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376314, текст: проект контракта.pdf
+2024-11-10 04:21:21,828 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 04:21:26,458 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:21:26,480 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376302, текст: 5-й новоподмосковный, д.4, корп.1 (1) (1).xlsx
+2024-11-10 04:21:26,480 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376306, текст: техническое+задание (2).docx
+2024-11-10 04:21:26,481 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376314, текст: проект контракта.pdf
+2024-11-10 04:22:05,734 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 04:22:10,775 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:22:10,801 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376302
+2024-11-10 04:22:10,801 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376306
+2024-11-10 04:22:10,802 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376314
+2024-11-10 04:23:11,562 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 04:23:16,834 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:23:16,857 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376302, текст: 5-й новоподмосковный, д.4, корп.1 (1) (1).xlsx
+2024-11-10 04:23:16,857 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376306, текст: техническое+задание (2).docx
+2024-11-10 04:23:16,857 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376314, текст: проект контракта.pdf
+2024-11-10 04:23:17,088 - INFO - Файл сохранён: downloads/___________+_______ (2).docx"; filename*=UTF-8''%D0%A2%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B5+%D0%B7%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%20%282%29.docx
+2024-11-10 04:23:17,395 - INFO - Файл сохранён: downloads/______ _________.pdf"; filename*=UTF-8''%D0%9F%D1%80%D0%BE%D0%B5%D0%BA%D1%82%20%D0%BA%D0%BE%D0%BD%D1%82%D1%80%D0%B0%D0%BA%D1%82%D0%B0.pdf
+2024-11-10 04:24:43,379 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 04:24:48,283 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:25:47,678 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9869552
+2024-11-10 04:25:52,369 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:25:52,392 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376302, текст: 5-й новоподмосковный, д.4, корп.1 (1) (1).xlsx
+2024-11-10 04:25:52,393 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376306, текст: техническое+задание (2).docx
+2024-11-10 04:25:52,393 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=233376314, текст: проект контракта.pdf
+2024-11-10 04:25:52,777 - INFO - Файл сохранён: downloads/ТЗ.docx
+2024-11-10 04:25:53,005 - INFO - Файл сохранён: downloads/Проект-контракта.pdf
+2024-11-10 04:26:29,114 - INFO - Открытие страницы: https://zakupki.mos.ru/auction/9864870
+2024-11-10 04:26:35,440 - INFO - HTML-код страницы успешно загружен.
+2024-11-10 04:26:35,486 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=232508260, текст: техническое задание автозапчасти (4).docx
+2024-11-10 04:26:35,486 - INFO - Найдена ссылка: https://zakupki.mos.ru/newapi/api/FileStorage/Download?id=232508272, текст: проект контракта.pdf
+2024-11-10 04:26:35,734 - INFO - Файл сохранён: downloads/ТЗ.docx
+2024-11-10 04:26:36,009 - INFO - Файл сохранён: downloads/Проект-контракта.pdf
