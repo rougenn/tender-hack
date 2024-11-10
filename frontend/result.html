@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Результат</title>
     <link rel="stylesheet" href="result.css">
-    
-        
 </head>
 
 <body>
@@ -45,13 +43,28 @@
     <div id="links-container"></div>
 
     <script>
-        const backendData = [
-            { url: "https://example.com/1", criteria: [0, 1, 0, 0, 1, 1] },
-            { url: "https://example.com/2", criteria: [1, 1, 1, 0, 0, 1] },
-            { url: "https://example.com/3", criteria: [1, 1, 1, 1, 1, 1] },
-        ];
+        let backendData = [];
+        let globalFilterStates = [];
 
-        let globalFilterStates = Array(backendData[0].criteria.length).fill(0);
+        async function fetchBackendData() {
+            try {
+                const response = await fetch("https://example.com/api/links"); // Замените на ваш реальный URL API
+                if (!response.ok) {
+                    throw new Error("Ошибка при загрузке данных с сервера");
+                }
+                backendData = await response.json();
+
+                // Инициализируем глобальные фильтры и ссылки
+                globalFilterStates = Array(backendData[0].criteria.length).fill(0);
+                const globalFilterContainer = document.getElementById("global-filter-container");
+                const linksContainer = document.getElementById("links-container");
+
+                initializeGlobalFilter(globalFilterContainer);
+                initializeLinks(linksContainer);
+            } catch (error) {
+                console.error("Ошибка при загрузке данных:", error);
+            }
+        }
 
         function initializeGlobalFilter(container) {
             const checkboxes = container.querySelectorAll("input[type='checkbox']");
@@ -73,7 +86,7 @@
 
                 linkContainer.innerHTML = `
                     <div class="filter-header">
-                        <span>Ссылка: ${url}</span>
+                        <span>Невалидная карточка</span>
                     </div>
                     <div class="link-container" id="link-output-${url.replace(/[^a-zA-Z0-9]/g, '')}"></div>
                 `;
@@ -102,7 +115,7 @@
             const showLink = filteredStates.includes(0);
 
             linkOutput.innerHTML = showLink
-                ? `<a href="${url}" target="_blank">Перейти по ссылке</a>`
+                ? `<a href="${url}" target="_blank">reference</a>`
                 : "";
         }
 
@@ -111,13 +124,8 @@
             filterBody.classList.toggle("open");
         }
 
-        window.onload = () => {
-            const globalFilterContainer = document.getElementById("global-filter-container");
-            const linksContainer = document.getElementById("links-container");
-
-            initializeGlobalFilter(globalFilterContainer);
-            initializeLinks(linksContainer);
-        };
+        // Инициализация при загрузке данных
+        window.onload = fetchBackendData;
     </script>
 </body>
 
